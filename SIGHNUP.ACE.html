@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sign Up Form</title>
+  <link href="C:\Users\USER\Desktop\CSS\SIGHNUP.ACE.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+  <h1>Sign Up For ace.com</h1>
+  <div class="container">
+  <form id="signup-form">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required><br><br>
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required><br><br>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required><br><br>
+    <label for="confirm-password">Confirm Password:</label>
+    <input type="password" id="confirm-password" name="confirm-password" required><br><br>
+    <button type="submit"><a href="C:\Users\USER\Desktop\HTMLS\sign in.html">Sign Up</a></button>
+  </form>
+</div>
+<style>
+  .container{
+    width: 50px;
+}
+</style>
+  <div id="email-verification-message"></div>
+  <script>
+    const express = require('express');
+const app = express();
+const bcrypt = require('bcrypt');
+
+app.use(express.json());
+
+app.post('/api/signup', async (req, res) => {
+  const { name, email, password } = req.body;
+
+  // Verify email input
+  if (!validateEmail(email)) {
+    return res.status(400).json({ error: 'Invalid email address' });
+  }
+
+  // Check if user already exists in the database
+  const existingUser = await db.query(`SELECT * FROM users WHERE email = '${email}'`);
+  if (existingUser.length > 0) {
+    return res.status(400).json({ error: 'Email already in use' });
+  }
+
+  // Hash the password using bcrypt
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  // Create a new user in the database
+  await db.query(`INSERT INTO users (name, email, password) VALUES ('${name}', '${email}', '${hashedPassword}')`);
+
+  res.json({ message: 'User created successfully!' });
+});
+
+app.listen(3000, () => {
+  console.log('Server started on port 3000');
+});
+  </script>
+</body>
+</html>

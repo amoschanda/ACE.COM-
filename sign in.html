@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SIGNUP ACE.COM</title>
+  <link href="C:\Users\USER\Desktop\CSS\SIGHN IN.ACE.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+  <h1>Sign in Form to ace.com</h1>
+  <form id="signup-form">
+    <span style="color: red;"><h1 class="h1">SIGHN IN TO ACE.COM</h1></span>
+    <div class="container2">
+    <label class="email" for="email">Email:</label>
+    <input type="EMAIL" id="email" name="email" required><br><br>
+    <label class="pin" for="pin">pin:</label>
+    <input type="tel" id="pin" name="in" required><br><br>
+    <label class="pin2" for="confirm-pin">Confirm pin:</label>
+    <input type="tel" id="confirm-pin" name="confirm-pin" required><br><br>
+    <span style="color: red;"<button class="button" type="submit">Sign IN</button></span>
+  </form>
+    </div>
+    <style>
+      body{
+    background-color:black;
+
+}
+
+
+.pin{
+    padding-left:300px;
+    padding-bottom:-300px;
+
+}
+
+.email{
+    padding-left:280px;
+
+}
+
+
+.pin2{
+    padding-left:241px;
+}
+
+
+
+.button{
+    padding-left:400px;
+}
+
+
+.h1{
+    padding-left:450px;
+}
+
+.container2{
+    background-color:grey;
+    width:840px;
+    height:144px;
+    margin-left:228px;
+    margin: 0 auto;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+
+
+
+
+.container {
+    height:255px;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff; /* White background for student profiles */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    </style>
+  <div id="email-verification-message"></div>
+  <script>
+    const express = require('express');
+const app = express();
+const bcrypt = require('bcrypt');
+
+app.use(express.json());
+
+app.post('/api/signup', async (req, res) => {
+  const { name, email, password } = req.body;
+
+  // Verify email input
+  if (!validateEmail(email)) {
+    return res.status(400).json({ error: 'Invalid email address' });
+  }
+
+  // Check if user already exists in the database
+  const existingUser = await db.query(`SELECT * FROM users WHERE email = '${email}'`);
+  if (existingUser.length > 0) {
+    return res.status(400).json({ error: 'Email already in use' });
+  }
+
+  // Hash the password using bcrypt
+  const hashedPassword = await bcrypt.hash(pin, 10);
+
+  // Create a new user in the database
+  await db.query(`INSERT INTO users (name, email, pin) VALUES ('${name}', '${email}', '${hashedPassword}')`);
+
+  res.json({ message: 'User created successfully!' });
+});
+
+app.listen(3000, () => {
+  console.log('Server started on port 3000');
+});
+  </script>
+</body>
+</html>

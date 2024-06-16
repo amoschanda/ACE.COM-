@@ -1,0 +1,109 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Student Database</title>
+    <style>
+        /* Basic styling for demonstration purposes */
+        body {
+            background-color: #f0f0f0; /* Gray background */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff; /* White background for student profiles */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        .student {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            background-color: #fff; /* White background for each student */
+        }
+
+        .student img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+            border-radius: 50%;
+            background-color: #ccc; /* Gray background for empty profile pictures */
+        }
+
+        .student-details {
+            flex-grow:1000;
+        }
+
+        .student-name {
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .student-email {
+            margin: 0;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>GAMES</h1>
+        <input type="text" id="searchInput" onkeyup="searchFunction()" placeholder="Search for names..">
+
+        <div id="studentList">
+            <!-- Placeholder for 2000 student profiles -->
+            <?php for ($i = 1; $i <= 2000; $i++) { ?>
+                <div class="student">
+                    <img src="c:\Users\USER\Pictures\d9gist3-ebf07355-dcf1-4291-91a3-bd4ae420beef.gif" alt="c:\Users\USER\Pictures\d9gist3-ebf07355-dcf1-4291-91a3-bd4ae420beef.gif">
+                    <div class="student-details">
+                        <h3 class="student-name"><a href="c:\Users\USER\Desktop\PSP GAMES.zip">PSP GAMES</a><?php echo $i; ?></h3>
+                        <p class="student-email">FIVE GAMES IN ONE<?php echo $i; ?></p>
+                    </div>
+                </div>
+            <?php } ?>
+        </div>
+    </div>
+
+    <script>
+        function searchFunction() {
+            var input, filter, ul, li, h3, i, txtValue;
+            input = document.getElementById('searchInput');
+            filter = input.value.toUpperCase();
+            ul = document.getElementById('studentList');
+
+            li = ul.getElementsByClassName('student');
+
+            for (i = 0; i < li.length; i++) {
+                h3 = li[i].getElementsByTagName('h3')[0];
+                txtValue = h3.textContent || h3.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    li[i].style.display = '';
+                } else {
+                    li[i].style.display = 'none';
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

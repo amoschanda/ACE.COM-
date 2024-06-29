@@ -1,2 +1,4 @@
 node_modules/
 .DS_Store
+git add .
+git commit -m "Initial commit: Added email validation code"

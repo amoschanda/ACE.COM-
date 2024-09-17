@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced HTML Learning</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, #333, #444);
+            color: #fff;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        nav {
+            background: #222;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav ul li a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            flex: 1;
+        }
+
+        h1, h2 {
+            color: #333;
+        }
+
+        code {
+            background: #e7e7e7;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 1.1em;
+            display: block;
+            word-wrap: break-word;
+        }
+
+        pre {
+            background: #e7e7e7;
+            border-radius: 4px;
+            padding: 15px;
+            overflow-x: auto;
+            max-height: 400px;
+        }
+
+        .example {
+            background: #f9f9f9;
+            border-left: 4px solid #333;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .example pre {
+            margin: 0;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+
+        footer {
+            background: #333;
+            color: #fff;
+            text-align: center;
+            padding: 15px;
+            box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        footer a {
+            color: #61dafb;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 10px;
+            }
+
+            nav ul li {
+                display: block;
+                margin: 10px 0;
+            }
+
+            nav ul li a {
+                display: block;
+                padding: 10px;
+                border-bottom: 1px solid #444;
+            }
+        }
+
+        /* Editor Styles */
+        .editor-container {
+            display: flex;
+            flex-direction: column;
+            margin-top: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 200px;
+            margin-bottom: 10px;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: none;
+        }
+
+        iframe {
+            width: 100%;
+            height: 300px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Advanced HTML Learning</h1>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#intro">Introduction</a></li>
+            <li><a href="#structure">HTML Structure</a></li>
+            <li><a href="#tags">Common Tags</a></li>
+            <li><a href="#sample">Sample Code</a></li>
+            <li><a href="#resources">Resources</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <section id="intro">
+            <h2>Introduction to HTML</h2>
+            <p>HTML stands for HyperText Markup Language. It is the fundamental building block of web development, providing the structure and meaning to web content through various tags and attributes.</p>
+        </section>
+
+        <section id="structure">
+            <h2>Basic HTML Structure</h2>
+            <p>Each HTML document follows a standard structure to ensure proper rendering by web browsers:</p>
+            <div class="example">
+                <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+    &lt;head&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+        &lt;title&gt;Document&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;Hello, World!&lt;/h1&gt;
+        &lt;p&gt;This is a paragraph.&lt;/p&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            </div>
+        </section>
+
+        <section id="tags">
+            <h2>Common HTML Tags</h2>
+            <ul>
+                <li><code>&lt;h1&gt; - &lt;h6&gt;</code>: Header tags used for headings of different levels.</li>
+                <li><code>&lt;p&gt;</code>: Paragraph tag for creating blocks of text.</li>
+                <li><code>&lt;a&gt;</code>: Anchor tag used for hyperlinks.</li>
+                <li><code>&lt;img&gt;</code>: Image tag used for embedding images.</li>
+                <li><code>&lt;ul&gt;</code> and <code>&lt;li&gt;</code>: Unordered list and list items.</li>
+                <li><code>&lt;ol&gt;</code> and <code>&lt;li&gt;</code>: Ordered list and list items.</li>
+            </ul>
+        </section>
+
+        <section id="sample">
+            <h2>Sample HTML Code</h2>
+            <p>Below is an example of a simple HTML document showcasing basic elements:</p>
+            <div class="example">
+                <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;My First Web Page&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;Welcome to My Web Page&lt;/h1&gt;
+        &lt;p&gt;This is a simple web page created with HTML.&lt;/p&gt;
+        &lt;a href="https://www.example.com"&gt;Visit Example&lt;/a&gt;
+        &lt;img src="https://via.placeholder.com/150" alt="Placeholder Image"&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            </div>
+        </section>
+
+        <section id="resources">
+            <h2>Learn More</h2>
+            <p>Explore the following resources to deepen your understanding of HTML:</p>
+            <ul>
+                <li><a href="https://www.w3schools.com/html/" target="_blank">W3Schools HTML Tutorial</a></li>
+                <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML" target="_blank">MDN Web Docs - HTML</a></li>
+                <li><a href="https://html.com/" target="_blank">HTML.com</a></li>
+            </ul>
+        </section>
+
+        <section class="editor-container">
+            <h2>Live HTML Editor</h2>
+            <p>Enter HTML code below to see a live preview:</p>
+            <textarea id="htmlEditor" placeholder="Type your HTML code here..."></textarea>
+            <iframe id="preview"></iframe>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Advanced HTML Learning. All rights reserved. <a href="https://www.example.com" target="_blank">by Amos Chanda</a></p>
+    </footer>
+
+    <script>
+        // Function to update iframe with HTML from textarea
+        function updatePreview() {
+            const editor = document.getElementById('htmlEditor');
+            const preview = document.getElementById('preview');
+            preview.srcdoc = editor.value;
+        }
+
+        // Event listener to update preview on textarea input
+        document.getElementById('htmlEditor').addEventListener('input', updatePreview);
+
+        // Initial update to make sure iframe shows default content
+        updatePreview();
+    </script>
+</body>
+
+</html>

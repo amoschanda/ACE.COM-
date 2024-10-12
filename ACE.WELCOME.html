@@ -107,7 +107,8 @@
     </footer>
 
     <script>
-<script>
+        const speakBtn = document.getElementById("speakBtn");
+        const message = document.getElementById("message");
 
         speakBtn.addEventListener("click", function () {
             const utterance = new SpeechSynthesisUtterance("Hello! Welcome to ACEFLIX. Enjoy your stay!");
@@ -123,15 +124,15 @@
             utterance.onend = function () {
                 message.textContent = "Click the button below to hear the voiceover.";
                 speakBtn.disabled = false; // Re-enable the button after speaking
+            };
 
-                // Show the install button after voiceover
-                if (deferredPrompt) {
-                    installBtn.style.display = 'inline-block';
-                }
+            // Handle errors
+            utterance.onerror = function (event) {
+                console.error('Speech synthesis error:', event.error);
+                message.textContent = "Error speaking the text.";
+                speakBtn.disabled = false; // Re-enable button on error
             };
         });
-</script>
-
     </script>
 
 </body>

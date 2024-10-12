@@ -107,45 +107,55 @@
     </footer>
 
     <script>
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT_ID.appspot.com",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
+<script>
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_PROJECT_ID.appspot.com",
+        messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+        appId: "YOUR_APP_ID"
+    };
+
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // Start button functionality
+    document.getElementById('startBtn').addEventListener('click', () => {
+        alert("Welcome to the fun! Let's get started.");
+        // Add any additional start logic here
+    });
+
+    const speakBtn = document.getElementById("speakBtn");
+    const message = document.getElementById("message");
+
+    speakBtn.addEventListener("click", function () {
+        const utterance = new SpeechSynthesisUtterance("Hello! Welcome to ACEFLIX. Enjoy your stay!");
+
+        // Update message while speaking
+        message.textContent = "You are listening...";
+        speakBtn.disabled = true;
+
+        // Speak the text
+        window.speechSynthesis.speak(utterance);
+
+        // Handle when the speech ends
+        utterance.onend = function () {
+            message.textContent = "Click the button below to hear the voiceover.";
+            speakBtn.disabled = false; // Re-enable the button after speaking
         };
 
-        // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
+        // Handle errors
+        utterance.onerror = function (event) {
+            console.error('Speech synthesis error:', event.error);
+            message.textContent = "Error speaking the text.";
+            speakBtn.disabled = false; // Re-enable button on error
+        };
+    });
+</script>
 
-        // Start button functionality
-        document.getElementById('startBtn').addEventListener('click', () => {
-            alert("Welcome to the fun! Let's get started.");
-            // Add any additional start logic here
-        });
-
-        const speakBtn = document.getElementById("speakBtn");
-        const message = document.getElementById("message");
-
-        speakBtn.addEventListener("click", function () {
-            const utterance = new SpeechSynthesisUtterance("Hello! Welcome to ACEFLIX. Enjoy your stay!");
-
-            // Update message while speaking
-            message.textContent = "You are listening...";
-            speakBtn.disabled = true;
-
-            // Speak the text
-            window.speechSynthesis.speak(utterance);
-
-            // Handle when the speech ends
-            utterance.onend = function () {
-                message.textContent = "Click the button below to hear the voiceover.";
-                speakBtn.disabled = false; // Re-enable the button after speaking
-            };
-        });
     </script>
 
 </body>

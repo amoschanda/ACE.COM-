@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ACEFLIX Welcome</title>
+    <title>ACEFLIX Welcome</title> 
     <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js"></script>
     <style>
@@ -49,10 +49,28 @@
             border: none;
             border-radius: 5px;
             margin: 5px;
+            transition: background-color 0.3s, transform 0.3s;
         }
 
         button:hover {
             background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .start-button {
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #28a745;
+            border: none;
+            border-radius: 50px;
+            color: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .start-button:hover {
+            background-color: #218838;
+            transform: scale(1.1);
         }
 
         .container {
@@ -77,8 +95,7 @@
     <main>
         <div class="container">
             <h1 style="color: red;">HELLO AND THANKS FOR VISITING ACE.COM</h1>
-            <h3 style="color: aqua;">Continue with Gmail</h3>
-            <button id="googleSignInBtn">Continue with Gmail</button>
+            <button class="start-button" id="startBtn">Start</button>
         </div>
 
         <p id="message">Click the button below to hear the voiceover.</p>
@@ -104,17 +121,10 @@
         const app = firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
 
-        // Google Sign-In
-        document.getElementById('googleSignInBtn').addEventListener('click', () => {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider).then((result) => {
-                const user = result.user;
-                alert(`Welcome, ${user.displayName}!`);
-                // Handle the signed-in user as needed
-            }).catch((error) => {
-                console.error(error);
-                alert('Error signing in with Google.');
-            });
+        // Start button functionality
+        document.getElementById('startBtn').addEventListener('click', () => {
+            alert("Welcome to the fun! Let's get started.");
+            // Add any additional start logic here
         });
 
         const speakBtn = document.getElementById("speakBtn");

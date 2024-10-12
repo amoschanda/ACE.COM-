@@ -3,156 +3,70 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ACEFLIX Welcome</title>
+    <title>ACEFLIX - Continue with Gmail</title>
+    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             height: 100vh;
             background-color: black;
             color: white;
-        }
-
-        header {
-            background-color: #007bff;
-            padding: 20px;
-            text-align: center;
-        }
-
-        main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
-
-        footer {
-            background-color: #007bff;
-            padding: 10px;
-            text-align: center;
         }
 
         button {
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
-            background-color: #007bff;
+            background-color: #4285F4;
             color: white;
             border: none;
             border-radius: 5px;
-            margin: 5px;
         }
 
         button:hover {
-            background-color: #0056b3;
-        }
-
-        #installBtn {
-            display: none; /* Hidden by default */
-        }
-
-        .container {
-            background-color: #fff;
-            color: black;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            width: 80%;
-            max-width: 800px;
-            margin: 20px auto;
-        }
-
-        .container2 {
-            background-color: grey;
-            padding: 20px;
-            border-radius: 5px;
-            width: 80%;
-            max-width: 800px;
-            margin: 20px auto;
+            background-color: #357ae8;
         }
     </style>
 </head>
 
 <body>
 
-    <header>
-        <h1>Welcome to ACEFLIX!</h1>
-    </header>
-
-    <main>
-        <div class="container">
-            <h1 style="color: red;">HELLO AND THANKS FOR VISITING ACE.COM</h1>
-            <div class="container2">
-                <h3 style="color: aqua;">SIGNUP AND NEVER LOSE YOUR DOWNLOADS</h3>
-                <form>
-                    <button><a href="SIGHNUP.ACE.html" style="color: white; text-decoration: none;">SIGNUP for account</a></button>
-                    <h3>IF YOU HAVE AN ACCOUNT</h3>
-                    <button><a href="sign in.html" style="color: white; text-decoration: none;">SIGN IN</a></button>
-                </form>
-            </div>
-        </div>
-
-        <p id="message">Click the button below to hear the voiceover.</p>
-        <button id="speakBtn">Play Voiceover</button>
-        <button id="installBtn">Install App</button>
-    </main>
-
-    <footer>
-        <p>&copy; 2024 My Web App</p>
-    </footer>
+    <button id="googleSignInBtn">Continue with Gmail</button>
 
     <script>
-        const speakBtn = document.getElementById("speakBtn");
-        const message = document.getElementById("message");
-        const installBtn = document.getElementById("installBtn");
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
 
-        let deferredPrompt; // Variable to hold the install prompt
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
 
-        // Show the install button when the PWA is installable
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            installBtn.style.display = 'inline-block'; // Show the install button
-        });
-
-        installBtn.addEventListener('click', async () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt(); // Show the install prompt
-                const { outcome } = await deferredPrompt.userChoice; // Wait for user response
-                console.log(`User response to the install prompt: ${outcome}`);
-                deferredPrompt = null; // Clear the deferredPrompt
-                installBtn.style.display = 'none'; // Hide the button again
-            }
-        });
-
-        speakBtn.addEventListener("click", function() {
-            const utterance = new SpeechSynthesisUtterance("Hello! Welcome to ACEFLIX. Enjoy your stay!");
-
-            // Update message while speaking
-            message.textContent = "You are listening...";
-            speakBtn.disabled = true;
-
-            // Speak the text
-            window.speechSynthesis.speak(utterance);
-
-            // Handle when the speech ends
-            utterance.onend = function() {
-                message.textContent = "Click the button below to hear the voiceover.";
-                speakBtn.disabled = false; // Re-enable the button after speaking
-
-                // Show the install button after voiceover
-                if (deferredPrompt) {
-                    installBtn.style.display = 'inline-block';
-                }
-            };
+        // Google Sign-In
+        document.getElementById('googleSignInBtn').addEventListener('click', () => {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider).then((result) => {
+                const user = result.user;
+                alert(`Welcome, ${user.displayName}!`);
+                // Here, you can redirect the user or handle the signed-in user as needed
+            }).catch((error) => {
+                console.error(error);
+                alert('Error signing in with Google.');
+            });
         });
     </script>
 
 </body>
+
 </html>

@@ -5,18 +5,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ACEFLIX Welcome</title> 
-    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js"></script>
+    <title>ACEFLIX & Student Database</title>
     <style>
+        /* Basic styling */
         body {
+            background-color: #f0f0f0;
             font-family: Arial, sans-serif;
             margin: 0;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            background-color: black;
-            color: white;
+            padding: 0;
         }
 
         header {
@@ -25,63 +21,78 @@
             text-align: center;
         }
 
-        main {
-            flex: 1;
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            text-align: center;
+            min-height: 100vh;
         }
 
-        footer {
-            background-color: #007bff;
-            padding: 10px;
-            text-align: center;
-        }
-
-        button {
+        .button {
             padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
             background-color: #007bff;
             color: white;
             border: none;
             border-radius: 5px;
-            margin: 5px;
-            transition: background-color 0.3s, transform 0.3s;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            margin: 10px;
         }
 
-        button:hover {
+        .button:hover {
             background-color: #0056b3;
             transform: scale(1.05);
         }
 
-        .start-button {
-            padding: 15px 30px;
-            font-size: 18px;
-            background-color: #28a745;
-            border: none;
-            border-radius: 50px;
-            color: white;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            transition: background-color 0.3s, transform 0.3s;
+        .hidden {
+            display: none;
         }
 
-        .start-button:hover {
-            background-color: #218838;
-            transform: scale(1.1);
-        }
-
-        .container {
-            background-color: #fff;
-            color: black;
+        .dropzone {
+            border: 2px dashed #007bff;
             padding: 20px;
+            margin-top: 20px;
+            min-height: 100px;
+            text-align: center;
+            background-color: #fff;
+            transition: border-color 0.3s ease;
+            pointer-events: none; /* Disable events */
+        }
+
+        .dropzone.hovered {
+            border-color: #0056b3;
+        }
+
+        .student {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px;
             border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            width: 80%;
-            max-width: 800px;
-            margin: 20px auto;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            cursor: pointer;
+        }
+
+        .student img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+            border-radius: 50%;
+            background-color: #ccc;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
         }
     </style>
 </head>
@@ -89,17 +100,38 @@
 <body>
 
     <header>
-        <h1>Welcome to ACEFLIX!</h1>
+        <h1>Welcome to ACEFLIX & Student Database!</h1>
     </header>
 
     <main>
         <div class="container">
-            <h1 style="color: red;">HELLO AND THANKS FOR VISITING ACE.COM</h1>
-            <button class="start-button" id="startBtn">Start</button>
-        </div>
+            <button class="button" id="startButton">Start</button>
 
-        <p id="message">Click the button below to hear the voiceover.</p>
-        <button id="speakBtn">Play Voiceover</button>
+            <div id="userOptions" class="hidden">
+                <h2>Select Role</h2>
+                <button class="button" id="ownerButton">Owner</button>
+                <button class="button" id="guestButton">Guest</button>
+            </div>
+
+            <div id="ownerOptions" class="hidden">
+                <h2>Enter Password</h2>
+                <input type="password" id="ownerPassword" placeholder="Enter Owner Password">
+                <button class="button" id="submitPassword">Submit</button>
+                <div>
+                    <div class="dropzone" id="fileDropzone">
+                        <p>Drop Files Here</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="guestOptions" class="hidden">
+                <h2>Search Database</h2>
+                <input type="text" id="searchInput" onkeyup="searchFunction()" placeholder="Search for games...">
+                <div id="studentList">
+                    <!-- Placeholder for student profiles -->
+                </div>
+            </div>
+        </div>
     </main>
 
     <footer>
@@ -107,33 +139,111 @@
     </footer>
 
     <script>
-        const speakBtn = document.getElementById("speakBtn");
-        const message = document.getElementById("message");
+        let dragDropEnabled = false;
 
-        speakBtn.addEventListener("click", function () {
-            const utterance = new SpeechSynthesisUtterance("Hello! Welcome to ACEFLIX. Enjoy your stay!");
+        document.getElementById('startButton').onclick = function () {
+            document.getElementById('userOptions').classList.remove('hidden');
+        };
 
-            // Update message while speaking
-            message.textContent = "You are listening...";
-            speakBtn.disabled = true;
+        document.getElementById('ownerButton').onclick = function () {
+            document.getElementById('ownerOptions').classList.remove('hidden');
+            document.getElementById('guestOptions').classList.add('hidden');
+        };
 
-            // Speak the text
-            window.speechSynthesis.speak(utterance);
+        document.getElementById('guestButton').onclick = function () {
+            document.getElementById('guestOptions').classList.remove('hidden');
+            document.getElementById('ownerOptions').classList.add('hidden');
+        };
 
-            // Handle when the speech ends
-            utterance.onend = function () {
-                message.textContent = "Click the button below to hear the voiceover.";
-                speakBtn.disabled = false; // Re-enable the button after speaking
-            };
+        document.getElementById('submitPassword').onclick = function () {
+            const password = document.getElementById('ownerPassword').value;
+            if (password === 'amos1234') {
+                alert('Access Granted');
+                dragDropEnabled = true;
+                document.getElementById('fileDropzone').style.pointerEvents = 'auto'; // Enable events
+            } else {
+                alert('Access Denied');
+            }
+        };
 
-            // Handle errors
-            utterance.onerror = function (event) {
-                console.error('Speech synthesis error:', event.error);
-                message.textContent = "Error speaking the text.";
-                speakBtn.disabled = false; // Re-enable button on error
-            };
+        // Drag and Drop Functionality
+        const fileDropzone = document.getElementById("fileDropzone");
+
+        fileDropzone.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            if (dragDropEnabled) {
+                fileDropzone.classList.add("hovered");
+            }
         });
-    </script>
 
+        fileDropzone.addEventListener("dragleave", () => {
+            fileDropzone.classList.remove("hovered");
+        });
+
+        fileDropzone.addEventListener("drop", (e) => {
+            e.preventDefault();
+            if (dragDropEnabled) {
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    for (let i = 0; i < files.length; i++) {
+                        uploadFile(files[i]); // Call function to upload file
+                    }
+                    fileDropzone.classList.remove("hovered");
+                }
+            }
+        });
+
+        function uploadFile(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            fetch('upload.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    addStudentToDatabase(file.name);
+                } else {
+                    alert('File upload failed: ' + data.error);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function addStudentToDatabase(fileName) {
+            const newStudent = document.createElement('div');
+            newStudent.className = 'student';
+            newStudent.innerHTML = `
+                <img src="c:\Users\USER\Pictures\d9gist3-ebf07355-dcf1-4291-91a3-bd4ae420beef.gif" alt="Profile Image">
+                <div class="student-details">
+                    <h3 class="student-name">${fileName}</h3>
+                    <p class="student-email">Uploaded File</p>
+                </div>
+            `;
+            document.getElementById('studentList').appendChild(newStudent);
+        }
+
+        function searchFunction() {
+            var input, filter, studentList, students, h3, i, txtValue;
+            input = document.getElementById('searchInput');
+            filter = input.value.toUpperCase();
+            studentList = document.getElementById('studentList');
+
+            students = studentList.getElementsByClassName('student');
+
+            for (i = 0; i < students.length; i++) {
+                h3 = students[i].getElementsByTagName('h3')[0];
+                txtValue = h3.textContent || h3.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    students[i].style.display = '';
+                } else {
+                    students[i].style.display = 'none';
+                }
+            }
+        }
+    </script>
 </body>
+
 </html>

@@ -3,8 +3,9 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ACEFLIX - Welcome</title>
+    <title>ACEFLIX Welcome</title>
     <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js"></script>
     <style>
@@ -43,7 +44,7 @@
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
-            background-color: #4285F4;
+            background-color: #007bff;
             color: white;
             border: none;
             border-radius: 5px;
@@ -51,27 +52,18 @@
         }
 
         button:hover {
-            background-color: #357ae8;
+            background-color: #0056b3;
         }
 
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background-color: white;
+        .container {
+            background-color: #fff;
             color: black;
             padding: 20px;
             border-radius: 5px;
-            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 800px;
+            margin: 20px auto;
         }
     </style>
 </head>
@@ -85,49 +77,17 @@
     <main>
         <div class="container">
             <h1 style="color: red;">HELLO AND THANKS FOR VISITING ACE.COM</h1>
-            <div class="container2">
-                <h3 style="color: aqua;">SIGNUP AND NEVER LOSE YOUR DOWNLOADS</h3>
-                <button id="signupBtn">SIGNUP for account</button>
-                <h3>IF YOU HAVE AN ACCOUNT</h3>
-                <button id="signinBtn">SIGN IN</button>
-            </div>
-            <h3>OR</h3>
+            <h3 style="color: aqua;">Continue with Gmail</h3>
             <button id="googleSignInBtn">Continue with Gmail</button>
         </div>
 
         <p id="message">Click the button below to hear the voiceover.</p>
         <button id="speakBtn">Play Voiceover</button>
-        <button id="installBtn">Install App</button>
     </main>
 
     <footer>
         <p>&copy; 2024 My Web App</p>
     </footer>
-
-    <!-- Signup Modal -->
-    <div class="modal" id="signupModal">
-        <div class="modal-content">
-            <h3>Sign Up</h3>
-            <form id="signupForm">
-                <input type="text" id="signupFirstName" placeholder="First Name" required>
-                <input type="email" id="signupEmail" placeholder="Email" required>
-                <button type="submit">Submit</button>
-                <button type="button" onclick="closeModal('signupModal')">Cancel</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Sign In Modal -->
-    <div class="modal" id="signinModal">
-        <div class="modal-content">
-            <h3>Sign In</h3>
-            <form id="signinForm">
-                <input type="email" id="signinEmail" placeholder="Email" required>
-                <button type="submit">Sign In</button>
-                <button type="button" onclick="closeModal('signinModal')">Cancel</button>
-            </form>
-        </div>
-    </div>
 
     <script>
         // Your web app's Firebase configuration
@@ -144,16 +104,6 @@
         const app = firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
 
-        // Show Signup Modal
-        document.getElementById("signupBtn").addEventListener("click", () => {
-            document.getElementById("signupModal").style.display = "flex";
-        });
-
-        // Show Sign In Modal
-        document.getElementById("signinBtn").addEventListener("click", () => {
-            document.getElementById("signinModal").style.display = "flex";
-        });
-
         // Google Sign-In
         document.getElementById('googleSignInBtn').addEventListener('click', () => {
             const provider = new firebase.auth.GoogleAuthProvider();
@@ -167,58 +117,8 @@
             });
         });
 
-        // Handle Signup Form Submission
-        document.getElementById("signupForm").addEventListener("submit", function (event) {
-            event.preventDefault(); // Prevent the default form submission
-
-            const firstName = document.getElementById("signupFirstName").value;
-            const email = document.getElementById("signupEmail").value;
-
-            // You can implement further handling or store the data as needed
-            alert(`Signup successful! Welcome, ${firstName}.`);
-
-            closeModal('signupModal'); // Close the modal
-        });
-
-        // Handle Sign In Form Submission
-        document.getElementById("signinForm").addEventListener("submit", function (event) {
-            event.preventDefault(); // Prevent the default form submission
-
-            const email = document.getElementById("signinEmail").value;
-
-            // You can implement further handling for sign in as needed
-            alert(`Sign in successful! Welcome back.`);
-
-            closeModal('signinModal'); // Close the modal
-        });
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = "none";
-            document.getElementById(modalId).querySelector('form').reset(); // Reset form fields
-        }
-
         const speakBtn = document.getElementById("speakBtn");
         const message = document.getElementById("message");
-        const installBtn = document.getElementById("installBtn");
-
-        let deferredPrompt; // Variable to hold the install prompt
-
-        // Show the install button when the PWA is installable
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            installBtn.style.display = 'inline-block'; // Show the install button
-        });
-
-        installBtn.addEventListener('click', async () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt(); // Show the install prompt
-                const { outcome } = await deferredPrompt.userChoice; // Wait for user response
-                console.log(`User response to the install prompt: ${outcome}`);
-                deferredPrompt = null; // Clear the deferredPrompt
-                installBtn.style.display = 'none'; // Hide the button again
-            }
-        });
 
         speakBtn.addEventListener("click", function () {
             const utterance = new SpeechSynthesisUtterance("Hello! Welcome to ACEFLIX. Enjoy your stay!");
@@ -234,15 +134,9 @@
             utterance.onend = function () {
                 message.textContent = "Click the button below to hear the voiceover.";
                 speakBtn.disabled = false; // Re-enable the button after speaking
-
-                // Show the install button after voiceover
-                if (deferredPrompt) {
-                    installBtn.style.display = 'inline-block';
-                }
             };
         });
     </script>
 
 </body>
-
 </html>

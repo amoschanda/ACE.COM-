@@ -5,243 +5,83 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ACEFLIX & Student Database</title>
+    <title>Welcome Page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* Basic styling */
         body {
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
-        header {
-            background-color: #007bff;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
-            align-items: center;
             justify-content: center;
-            min-height: 100vh;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            color: #ffffff;
+            text-align: center;
+            background: url('https://th.bing.com/th/id/OIP.gIofFU1u56ZODV9ahi-QzwHaEK?rs=1&pid=ImgDetMain') no-repeat center center fixed; /* Replace with your image URL */
+            background-size: cover;
         }
 
-        .button {
-            padding: 10px 20px;
-            background-color: #007bff;
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+
+        p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .option-button {
+            padding: 15px 25px;
+            background-color: rgba(46, 164, 79, 0.9);
             color: white;
             border: none;
             border-radius: 5px;
+            font-size: 1em;
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-            margin: 10px;
+            transition: background-color 0.3s, transform 0.2s;
         }
 
-        .button:hover {
-            background-color: #0056b3;
+        .option-button:hover {
+            background-color: rgba(34, 134, 58, 0.9);
             transform: scale(1.05);
         }
 
-        .hidden {
-            display: none;
-        }
-
-        .dropzone {
-            border: 2px dashed #007bff;
-            padding: 20px;
+        .footer {
             margin-top: 20px;
-            min-height: 100px;
-            text-align: center;
-            background-color: #fff;
-            transition: border-color 0.3s ease;
-            pointer-events: none; /* Disable events */
-        }
-
-        .dropzone.hovered {
-            border-color: #0056b3;
-        }
-
-        .student {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            background-color: #fff;
-            cursor: pointer;
-        }
-
-        .student img {
-            width: 50px;
-            height: 50px;
-            margin-right: 10px;
-            border-radius: 50%;
-            background-color: #ccc;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            box-sizing: border-box;
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.8);
         }
     </style>
 </head>
 
 <body>
+    <h1>Welcome to Our School Database!</h1>
+    <p>Your gateway to learning and managing student profiles.</p>
+    
+    <div class="options">
+        <button class="option-button" onclick="window.location.href='https://amoschanda.github.io/ACE.COM-/LEARN%20HTML.html'">Learn HTML</button>
+        <button class="option-button" onclick="startVoiceOver('9B Student Database')">9B Student Database</button>
+    </div>
 
-    <header>
-        <h1>Welcome to ACEFLIX & Student Database!</h1>
-    </header>
-
-    <main>
-        <div class="container">
-            <button class="button" id="startButton">Start</button>
-
-            <div id="userOptions" class="hidden">
-                <h2>Select Role</h2>
-                <button class="button" id="ownerButton">Owner</button>
-                <button class="button" id="guestButton">Guest</button>
-            </div>
-
-            <div id="ownerOptions" class="hidden">
-                <h2>Enter Password</h2>
-                <input type="password" id="ownerPassword" placeholder="Enter Owner Password">
-                <button class="button" id="submitPassword">Submit</button>
-                <div>
-                    <div class="dropzone" id="fileDropzone">
-                        <p>Drop Files Here</p>
-                    </div>
-                </div>
-            </div>
-
-            <div id="guestOptions" class="hidden">
-                <h2>Search Database</h2>
-                <input type="text" id="searchInput" onkeyup="searchFunction()" placeholder="Search for games...">
-                <div id="studentList">
-                    <!-- Placeholder for student profiles -->
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <footer>
-        <p>&copy; 2024 My Web App</p>
-    </footer>
+    <div class="footer">© 2024 School Database</div>
 
     <script>
-        let dragDropEnabled = false;
-
-        document.getElementById('startButton').onclick = function () {
-            document.getElementById('userOptions').classList.remove('hidden');
-        };
-
-        document.getElementById('ownerButton').onclick = function () {
-            document.getElementById('ownerOptions').classList.remove('hidden');
-            document.getElementById('guestOptions').classList.add('hidden');
-        };
-
-        document.getElementById('guestButton').onclick = function () {
-            document.getElementById('guestOptions').classList.remove('hidden');
-            document.getElementById('ownerOptions').classList.add('hidden');
-        };
-
-        document.getElementById('submitPassword').onclick = function () {
-            const password = document.getElementById('ownerPassword').value;
-            if (password === 'amos1234') {
-                alert('Access Granted');
-                dragDropEnabled = true;
-                document.getElementById('fileDropzone').style.pointerEvents = 'auto'; // Enable events
-            } else {
-                alert('Access Denied');
-            }
-        };
-
-        // Drag and Drop Functionality
-        const fileDropzone = document.getElementById("fileDropzone");
-
-        fileDropzone.addEventListener("dragover", (e) => {
-            e.preventDefault();
-            if (dragDropEnabled) {
-                fileDropzone.classList.add("hovered");
-            }
-        });
-
-        fileDropzone.addEventListener("dragleave", () => {
-            fileDropzone.classList.remove("hovered");
-        });
-
-        fileDropzone.addEventListener("drop", (e) => {
-            e.preventDefault();
-            if (dragDropEnabled) {
-                const files = e.dataTransfer.files;
-                if (files.length > 0) {
-                    for (let i = 0; i < files.length; i++) {
-                        uploadFile(files[i]); // Call function to upload file
-                    }
-                    fileDropzone.classList.remove("hovered");
-                }
-            }
-        });
-
-        function uploadFile(file) {
-            const formData = new FormData();
-            formData.append('file', file);
-
-            fetch('upload.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    addStudentToDatabase(file.name);
-                } else {
-                    alert('File upload failed: ' + data.error);
-                }
-            })
-            .catch(error => console.error('Error:', error));
-        }
-
-        function addStudentToDatabase(fileName) {
-            const newStudent = document.createElement('div');
-            newStudent.className = 'student';
-            newStudent.innerHTML = `
-                <img src="c:\Users\USER\Pictures\d9gist3-ebf07355-dcf1-4291-91a3-bd4ae420beef.gif" alt="Profile Image">
-                <div class="student-details">
-                    <h3 class="student-name">${fileName}</h3>
-                    <p class="student-email">Uploaded File</p>
-                </div>
-            `;
-            document.getElementById('studentList').appendChild(newStudent);
-        }
-
-        function searchFunction() {
-            var input, filter, studentList, students, h3, i, txtValue;
-            input = document.getElementById('searchInput');
-            filter = input.value.toUpperCase();
-            studentList = document.getElementById('studentList');
-
-            students = studentList.getElementsByClassName('student');
-
-            for (i = 0; i < students.length; i++) {
-                h3 = students[i].getElementsByTagName('h3')[0];
-                txtValue = h3.textContent || h3.innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    students[i].style.display = '';
-                } else {
-                    students[i].style.display = 'none';
-                }
-            }
+        function startVoiceOver(option) {
+            const message = `You selected: ${option}. Enjoy your learning experience!`;
+            const speech = new SpeechSynthesisUtterance(message);
+            speech.lang = 'en-US';
+            window.speechSynthesis.speak(speech);
         }
     </script>
 </body>

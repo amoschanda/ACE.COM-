@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Student Database</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f6f8fa;
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #24292e;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #0366d6;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .role-button,
+        .exit-button,
+        .back-button {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #2ea44f;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+
+        .role-button:hover,
+        .exit-button:hover,
+        .back-button:hover {
+            background-color: #22863a;
+        }
+
+        .drop-area {
+            border: 2px dashed #e1e4e8;
+            border-radius: 5px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s, border-color 0.3s;
+            color: #586069;
+            display: none;
+        }
+
+        .drop-area.dragover {
+            background-color: #f1f8ff;
+            border-color: #2188ff;
+        }
+
+        .student {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #e1e4e8;
+            background-color: #f6f8fa;
+            transition: background-color 0.3s;
+        }
+
+        .student:hover {
+            background-color: #e1e4e8;
+        }
+
+        .student img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+            border-radius: 50%;
+            background-color: #ccc;
+            cursor: pointer; /* Change cursor to pointer */
+        }
+
+        .student-details {
+            flex-grow: 1;
+        }
+
+        .student-name {
+            margin: 0;
+            font-weight: bold;
+            color: #0366d6;
+        }
+
+        .student-email {
+            margin: 0;
+            color: #586069;
+        }
+
+        .delete-button,
+        .download-button {
+            margin-left: 10px;
+            cursor: pointer;
+            transition: color 0.3s;
+            color: #2ea44f;
+        }
+
+        .delete-button:hover,
+        .download-button:hover {
+            color: #22863a;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1000; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.7);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal img {
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 30px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div id="roleSelection">
+            <h1>Select Role</h1>
+            <button class="role-button" onclick="showLogin('owner')">Owner</button>
+            <button class="role-button" onclick="showLogin('user')">User</button>
+        </div>
+
+        <div id="loginContainer" style="display: none;">
+            <h1 id="loginTitle">Owner Login</h1>
+            <input type="password" id="pinInput" placeholder="Enter Owner PIN">
+            <button class="role-button" onclick="login()">Login</button>
+            <button class="role-button" onclick="cancelLogin()">Cancel</button>
+        </div>
+
+        <div id="mainContainer" style="display: none;">
+            <h1>Student Profiles</h1>
+            <input type="text" id="searchInput" onkeyup="searchFunction()" placeholder="Search for names.." style="display: none;">
+            <div class="drop-area" id="dropArea">
+                <p>Drag and drop files here or click to select files</p>
+                <input type="file" id="fileInput" accept="audio/*, video/*, image/*" style="display: none;" onchange="handleFileSelect(event)">
+            </div>
+            <div id="studentList"></div>
+            <button class="back-button" onclick="goBack()">Back</button>
+            <button class="exit-button" onclick="exitBrowser()">Exit</button>
+        </div>
+    </div>
+
+    <!-- Modal for enlarged image -->
+    <div id="imageModal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img id="modalImage" src="" alt="Enlarged Image">
+    </div>
+
+    <script>
+        const correctPin = '0978551388';
+        let studentCount = 0;
+
+        window.onload = function () {
+            document.getElementById('roleSelection').style.display = 'block';
+            const dropArea = document.getElementById('dropArea');
+
+            dropArea.addEventListener('click', () => {
+                document.getElementById('fileInput').click();
+            });
+
+            dropArea.addEventListener('dragover', (event) => {
+                event.preventDefault();
+                dropArea.classList.add('dragover');
+            });
+
+            dropArea.addEventListener('dragleave', () => {
+                dropArea.classList.remove('dragover');
+            });
+
+            dropArea.addEventListener('drop', (event) => {
+                event.preventDefault();
+                dropArea.classList.remove('dragover');
+                const files = event.dataTransfer.files;
+                if (files.length) {
+                    handleFileSelect({ target: { files } });
+                }
+            });
+        };
+
+        function showLogin(role) {
+            document.getElementById('roleSelection').style.display = 'none';
+            if (role === 'user') {
+                document.getElementById('mainContainer').style.display = 'block';
+                loadProfiles();
+            } else {
+                document.getElementById('loginContainer').style.display = 'block';
+                document.getElementById('loginTitle').innerText = 'Owner Login';
+            }
+        }
+
+        function login() {
+            const pinInput = document.getElementById('pinInput').value;
+            if (pinInput === correctPin) {
+                document.getElementById('loginContainer').style.display = 'none';
+                document.getElementById('mainContainer').style.display = 'block';
+                document.getElementById('dropArea').style.display = 'block';
+                document.getElementById('searchInput').style.display = 'block';
+                loadProfiles(true); // Load profiles with owner access
+            } else {
+                alert('Incorrect PIN. Please try again.');
+            }
+        }
+
+        function cancelLogin() {
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('roleSelection').style.display = 'block';
+            document.getElementById('pinInput').value = '';
+        }
+
+        function loadProfiles(isOwner = false) {
+            const storedProfiles = JSON.parse(localStorage.getItem('studentProfiles')) || [];
+            studentCount = 0;
+            document.getElementById('studentList').innerHTML = '';
+            storedProfiles.forEach(profile => {
+                addStudentProfile(profile.name, profile.image, isOwner);
+            });
+        }
+
+        function searchFunction() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toUpperCase();
+            const ul = document.getElementById('studentList');
+            const li = ul.getElementsByClassName('student');
+
+            for (let i = 0; i < li.length; i++) {
+                const h3 = li[i].getElementsByTagName('h3')[0];
+                const txtValue = h3.textContent || h3.innerText;
+                li[i].style.display = txtValue.toUpperCase().indexOf(filter) > -1 ? '' : 'none';
+            }
+        }
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    addStudentProfile(file.name, e.target.result, true);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function addStudentProfile(name, image, isOwner) {
+            studentCount++;
+            const studentList = document.getElementById('studentList');
+            const studentDiv = document.createElement('div');
+            studentDiv.className = 'student';
+
+            studentDiv.innerHTML = `
+                <img src="${image}" alt="${name}" onclick="openModal('${image}')">
+                <div class="student-details">
+                    <h3 class="student-name">${name} (${studentCount})</h3>
+                    <p class="student-email">Selected Game ${studentCount}</p>
+                    ${isOwner ? `<span class="delete-button" onclick="deleteProfile(this)">Delete</span>` : ''}
+                    <a class="download-button" href="${image}" download="${name}">Download</a>
+                </div>
+            `;
+
+            studentList.appendChild(studentDiv);
+            saveProfileToLocalStorage(name, image);
+        }
+
+        function saveProfileToLocalStorage(name, image) {
+            const storedProfiles = JSON.parse(localStorage.getItem('studentProfiles')) || [];
+            storedProfiles.push({ name, image });
+            localStorage.setItem('studentProfiles', JSON.stringify(storedProfiles));
+        }
+
+        function deleteProfile(button) {
+            const studentDiv = button.parentElement.parentElement;
+            studentDiv.remove();
+
+            const name = studentDiv.getElementsByClassName('student-name')[0].innerText;
+            removeProfileFromLocalStorage(name);
+        }
+
+        function removeProfileFromLocalStorage(name) {
+            let storedProfiles = JSON.parse(localStorage.getItem('studentProfiles')) || [];
+            storedProfiles = storedProfiles.filter(profile => profile.name !== name);
+            localStorage.setItem('studentProfiles', JSON.stringify(storedProfiles));
+        }
+
+        function goBack() {
+            document.getElementById('mainContainer').style.display = 'none';
+            document.getElementById('roleSelection').style.display = 'block';
+            document.getElementById('searchInput').style.display = 'none';
+            document.getElementById('dropArea').style.display = 'none';
+        }
+
+        function exitBrowser() {
+            window.close(); // May not work in all browsers
+        }
+
+        function openModal(imageSrc) {
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            modal.style.display = 'flex';
+            modalImage.src = imageSrc;
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('imageModal');
+            modal.style.display = 'none';
+        }
+    </script>
+</body>
+</html>

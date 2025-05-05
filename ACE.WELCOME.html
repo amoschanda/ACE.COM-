@@ -1,152 +1,259 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Future.WEB</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+  <!-- MEDIA_HUB_VERSION: 1.0.0 -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MEDIA HUB | Stream & Download</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --neon-purple: #bc13fe;
+      --cyber-blue: #0ff0fc;
+      --void-black: #0a0e17;
+      --hologram-white: #e0f8ff;
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Orbitron', sans-serif;
-        }
+    * { 
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box; 
+      font-family: 'Orbitron', sans-serif; 
+    }
 
-        body {
-            background: linear-gradient(135deg, rgb(0, 0, 0), rgba(0, 0, 0, 0.959), rgba(2, 2, 2, 0.658));
-            color: slategray;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            text-align: center;
-            padding: 20px;
-            overflow-x: hidden;
-        }
+    body {
+      background: var(--void-black);
+      color: var(--hologram-white);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
 
-        .container {
-            background: linear-gradient(135deg, #be0003, #00c6ff);
-            width: 90%;
-            max-width: 1200px;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 30px rgba(173, 173, 173);
-            overflow: hidden;
-            opacity: 0;
-            animation: fadeInContainer 1.5s forwards;
-        }
+    .main-content {
+      padding: 2rem;
+      text-align: center;
+    }
 
-        .content {
-            text-align: center;
-            color: white;
-            margin-bottom: 20px;
-            animation: slideUp 1s ease-out forwards 0.5s;
-        }
+    .prompt {
+      font-size: 1.5rem;
+      background: linear-gradient(90deg, var(--neon-purple), var(--cyber-blue));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 2rem;
+      animation: glow 2s infinite alternate;
+    }
 
-        .main-content {
-            opacity: 0;
-            color: rgb(207, 11, 11);
-            animation: fadeIn 4s forwards 5s;
-        }
+    .underline-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      border-bottom: 1px solid rgba(188, 19, 254, 0.3);
+      position: relative;
+      margin-bottom: 2rem;
+    }
 
-        .screen {
-            width: 100%;
-            height: 150px;
-            background: linear-gradient(165deg, #ff0004, rgb(68, 67, 67), rgb(14, 12, 12), rgba(187, 181, 181, 0));
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 30px rgba(255, 255, 255, 0.973);
-            color: aqua;
-            margin-bottom: 20px;
-            animation: fadeIn 1s ease-out forwards 1s;
-        }
+    .tab {
+      position: relative;
+      padding: 0.5rem 0;
+      cursor: pointer;
+      font-size: 1rem;
+      color: var(--hologram-white);
+      transition: color 0.3s ease;
+    }
 
-        .service-buttons {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-            width: 100%;
-        }
+    .tab:hover {
+      color: var(--neon-purple);
+    }
 
-        .service-buttons button {
-            width: 80%;
-            padding: 15px;
-            font-size: 1rem;
-            border-radius: 10px;
-            color: aqua;
-            background: linear-gradient(135deg, rgb(68, 68, 68), rgb(0, 0, 0));
-            border: none;
-            cursor: pointer;
-            transition: 0.3s;
-            animation: zoomIn 1s ease-in-out forwards 2s;
-        }
+    .tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--neon-purple);
+    }
 
-        .service-buttons button:hover {
-            background: linear-gradient(135deg, rgb(0, 0, 0), rgb(34, 32, 32));
-            color: rgba(255, 20, 20, 0.993);
-            transform: scale(1.1);
-        }
+    .arrow-container {
+      position: absolute;
+      bottom: -30px;
+      left: 0;
+      width: 100%;
+      height: 20px;
+    }
 
-        @keyframes fadeInContainer {
-            to {
-                opacity: 1;
-            }
-        }
+    .arrow {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="%23bc13fe" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>') no-repeat center;
+      background-size: contain;
+      animation: moveArrow 6s infinite;
+    }
 
-        @keyframes slideUp {
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
 
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-            }
-        }
+    .media-card {
+      background: rgba(20, 25, 40, 0.6);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(188, 19, 254, 0.1);
+      display: none;
+    }
 
-        @keyframes zoomIn {
-            0% {
-                transform: scale(0.7);
-                opacity: 0;
-            }
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-    </style>
+    .media-card.show {
+      display: block;
+      animation: fadeIn 0.5s forwards;
+    }
+
+    .download-btn {
+      display: block;
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+      border: none;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--neon-purple), var(--cyber-blue));
+      color: var(--void-black);
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .update-notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--void-black);
+      color: var(--hologram-white);
+      padding: 1rem;
+      border: 1px solid var(--neon-purple);
+      border-radius: 8px;
+      z-index: 1000;
+      box-shadow: 0 0 15px rgba(188, 19, 254, 0.4);
+    }
+
+    .update-notification button {
+      margin-left: 10px;
+      background: var(--neon-purple);
+      color: var(--void-black);
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 10px var(--neon-purple); }
+      to { text-shadow: 0 0 20px var(--cyber-blue); }
+    }
+
+    @keyframes moveArrow {
+      0% { transform: translateX(0); }
+      33% { transform: translateX(100%); }
+      66% { transform: translateX(200%); }
+      100% { transform: translateX(0); }
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; transform: translateY(20px); }
+    }
+  </style>
 </head>
-
 <body>
-    <div class="container">
-        <div class="content">
-            <h1>OVERVIEW Future Technology</h1>
-            <p>BROUGHT TO YOU BY ACE.</p>
+  <main class="main-content">
+    <div class="overview-header">
+      <div class="prompt">Choose an option</div>
+      <div class="underline-tabs" id="tabs">
+        <div class="tab active" data-filter="movies">Movies</div>
+        <div class="tab" data-filter="music">Music</div>
+        <div class="tab" data-filter="games">Games</div>
+        <div class="arrow-container">
+          <div class="arrow"></div>
         </div>
-
-        <div class="main-content">
-            <h1>Overview</h1>
-            <h2>The future is here! Discover the next gen of technology.</h2>
-            <a href="#" class="btn">Discover More</a>
-        </div>
-
-        <div class="screen">
-            <div class="service-buttons" id="service-buttons">
-                <button class="service">Gaming</button>
-                <button class="service">Electronics</button>
-                <button class="service">Mobile</button>
-            </div>
-        </div>
+      </div>
     </div>
-</body>
+    <div class="media-grid" id="mediaGrid"></div>
+  </main>
 
+  <script>
+    const tabs = document.querySelectorAll('.tab');
+    const mediaGrid = document.getElementById('mediaGrid');
+
+    // Tab functionality
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        loadContent(tab.dataset.filter);
+      });
+    });
+
+    // Content loading
+    function loadContent(category) {
+      mediaGrid.innerHTML = '<div class="loading">Loading...</div>';
+      
+      // Simulated content loading
+      setTimeout(() => {
+        mediaGrid.innerHTML = `
+          <div class="media-card show">
+            <div class="media-thumbnail" style="background-image: url('https://via.placeholder.com/300x180')"></div>
+            <div class="media-info">
+              <div class="media-title">Sample ${category}</div>
+              <button class="download-btn">Download</button>
+            </div>
+          </div>
+        `.repeat(6);
+      }, 500);
+    }
+
+    // Update system
+    function checkForUpdates() {
+      const localVersion = document.documentElement.outerHTML.match(
+        /<!-- MEDIA_HUB_VERSION: (.*?) -->/
+      )?.[1];
+
+      fetch('https://amoschanda.github.io/ACE.COM-/ACE.WELCOME.html')
+        .then(r => r.text())
+        .then(html => {
+          const remoteVersion = html.match(
+            /<!-- MEDIA_HUB_VERSION: (.*?) -->/
+          )?.[1];
+          
+          if(remoteVersion && remoteVersion !== localVersion) {
+            showUpdateNotification();
+          }
+        });
+    }
+
+    function showUpdateNotification() {
+      const notification = document.createElement('div');
+      notification.className = 'update-notification';
+      notification.innerHTML = `
+        <p>🔄 Update Available! 
+          <button onclick="forceUpdate()">Install Now</button>
+        </p>
+      `;
+      document.body.appendChild(notification);
+    }
+
+    function forceUpdate() {
+      caches.keys().then(names => names.forEach(name => caches.delete(name)));
+      window.location.reload(true);
+    }
+
+    // Initialization
+    document.querySelector('.tab.active').click();
+    checkForUpdates();
+    setInterval(checkForUpdates, 3600000);
+  </script>
+</body>
 </html>
